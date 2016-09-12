@@ -1,14 +1,15 @@
-package org.jasig.cas.test.validation
+package org.apereo.cas.test.validation
+
 import static groovyx.net.http.ContentType.*
 
-import org.jasig.cas.test.common.CommonGebSpec
+import org.apereo.cas.test.common.CommonGebSpec
 
-class UnsuccessfulValidationAtServiceValidateSpec extends CommonGebSpec {
+class UnsuccessfulValidationAtValidateSpec extends CommonGebSpec {
 	def setup() {
 		super
 	}
 
-	def "CAS 2.0 unsuccessful validation at /serviceValidate"() {
+	def "CAS 2.0 unsuccessful validation at /validate"() {
 		given:
 
 		// Get a service ticket	using the ticket granting ticket
@@ -52,11 +53,13 @@ class UnsuccessfulValidationAtServiceValidateSpec extends CommonGebSpec {
 		
 		println "proxyTicket: $proxyTicket"
 
-		// Submit the proxy ticket to /serviceValidate which should not allow proxy tickets.
-		respSt = client.get( path : "/" + properties."cas.context.root" + "/serviceValidate", 
+		client.contentType = TEXT
+		
+		// Submit the proxy ticket to /validate which should not allow proxy tickets.
+		respSt = client.get( path : "/" + properties."cas.context.root" + "/validate", 
 			query : [ service: "$baseUrl/protected-web-app/", ticket: "$proxyTicket"])  { resp, xml ->
 				assert resp.status == 200
-				assert xml.authenticationFailure.@code == 'INVALID_TICKET'
+				assert xml.text.trim() == 'no'
 			}
 	}
 }

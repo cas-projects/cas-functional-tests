@@ -1,4 +1,4 @@
-package org.jasig.cas.test.common
+package org.apereo.cas.test.common
 
 import geb.spock.GebSpec
 import groovyx.net.http.*
